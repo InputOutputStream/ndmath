@@ -1,0 +1,29 @@
+#ifndef ARRAY
+#define ARRAY
+
+    #include "ndarray.h"
+
+    extern ndarray_t array(size_t rows, size_t cols);
+    extern ndarray_t linspace(int max, int min, double spacing, size_t rows ,size_t cols);
+    extern ndarray_t arange(int max, int min, size_t rows, size_t cols, char *order);// on reflechis
+    extern ndarray_t zeros(size_t rows, size_t cols);
+    extern ndarray_t ones(size_t rows, size_t cols);
+    extern ndarray_t empty(size_t rows, size_t cols);
+    extern ndarray_t argmin(ndarray_t *this, char *axis);
+    extern ndarray_t argmax(ndarray_t *this, char *axis);
+    extern ndarray_t reshape(ndarray_t *this, size_t start, size_t stop);
+    extern ndarray_t trill(double fill, size_t rows, size_t cols);
+    extern ndarray_t trilup(double fill, size_t rows, size_t cols);
+    extern ndarray_t identity(size_t rows, size_t cols);
+    extern ndarray_t copy(ndarray_t *arrayB);
+
+    extern ndarray_t bindexing(ndarray_t *this, size_t start, size_t stop);
+    extern ndarray_t cslice (ndarray_t *this, size_t col_start, size_t col_stop);
+    extern ndarray_t rslice (ndarray_t *this, size_t rows_start, size_t rows_stop);
+    extern ndarray_t cassign(ndarray_t *this, ndarray_t *arrayB, size_t col_index);
+    extern ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t row_index);
+
+    extern ndarray_t repeat(ndarray_t *this, size_t cols);
+
+
+#endif
