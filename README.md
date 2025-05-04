@@ -174,7 +174,7 @@ This copies:
 ### 5. Compile a Program
 To use NDMath in your program, link against the library:
 ```bash
-gcc -Iinclude my_program.c -Lbuild/lib -lmathutils -lm -o my_program
+gcc -Iinclude my_program.c -Lbuild/lib -lndmath -lm -o my_program
 ```
 
 For dynamic linking, set the library path:
@@ -516,7 +516,7 @@ Static linking embeds the library into your binary, eliminating runtime dependen
 
 3. Compile and link:
    ```bash
-   gcc -Iinclude my_program.c -Lbuild/lib -lmathutils -lm -o my_program
+   gcc -Iinclude my_program.c -Lbuild/lib -lndmath -lm -o my_program
    ```
 
 4. Run:
@@ -538,7 +538,7 @@ Dynamic linking allows library updates without recompiling your program.
 
 3. Compile and link:
    ```bash
-   gcc -Iinclude my_program.c -Lbuild/lib -lmathutils -lm -o my_program
+   gcc -Iinclude my_program.c -Lbuild/lib -lndmath -lm -o my_program
    ```
 
 4. Set the library path and run:
@@ -569,7 +569,7 @@ A sample `Makefile` for a project using NDMath:
 ```makefile
 CC = gcc
 CFLAGS = -I./include -Wall -O2
-LDFLAGS = -L./build/lib -lmathutils -lm
+LDFLAGS = -L./build/lib -lndmath -lm
 
 SRC = my_program.c
 OBJ = $(SRC:.c=.o)
@@ -694,7 +694,7 @@ int main() {
 **Compile**:
 ```bash
 make static
-gcc -Iinclude example.c -Lbuild/lib -lmathutils -lm -o example
+gcc -Iinclude example.c -Lbuild/lib -lndmath -lm -o example
 ```
 
 **Run**:
@@ -709,7 +709,7 @@ This program demonstrates array creation, file I/O, mathematical operations, ran
 ## 🔍 Troubleshooting
 
 - **Compiler Errors**: Ensure all source files and headers are included. Use `-Iinclude` for headers.
-- **Linker Errors**: Link with `-lmathutils` and `-lm`. Verify library paths with `-Lbuild/lib`.
+- **Linker Errors**: Link with `-lndmath` and `-lm`. Verify library paths with `-Lbuild/lib`.
 - **Segmentation Faults**: Check for null pointers or uninitialized arrays. Use `isnull(&arr)` and `clean()`.
 - **File I/O Issues**: Ensure CSV files use semicolons (`;`) and correct paths.
 - **Axis Errors**: Use valid axis values (`"x"`, `"y"`, `"all"`).
