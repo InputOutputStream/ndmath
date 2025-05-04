@@ -84,8 +84,15 @@ install: shared static
 	cp -r $(INCLUDE_DIR)/$(LIB_NAME)/* $(DESTDIR)/usr/local/include/$(LIB_NAME)/
 	ln -sf $(DESTDIR)/usr/local/lib/$(SHARED_LIB) $(DESTDIR)/usr/local/lib/lib$(LIB_NAME).so
 
+# Uninstall the library
+uninstall:
+	rm -f $(DESTDIR)/usr/local/lib/lib$(LIB_NAME).a
+	rm -f $(DESTDIR)/usr/local/lib/lib$(LIB_NAME).so
+	rm -f $(DESTDIR)/usr/local/lib/$(SONAME)
+	rm -rf $(DESTDIR)/usr/local/include/$(LIB_NAME)
+
 # Run tests
 run-tests: tests
 	LD_LIBRARY_PATH=$(LIB_DIR):$(LD_LIBRARY_PATH) $(TEST_BIN)
 
-.PHONY: all directories static shared tests examples clean install run-tests
+.PHONY: all directories static shared tests examples clean install uninstall run-tests
