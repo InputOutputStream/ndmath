@@ -67,7 +67,6 @@ ndarray_t mean (ndarray_t *this, char *axis)
     {
             fprintf(stderr, "Unkown Axis\n");
             perror("Provide a valid axis\n");
-            clean(this, NULL);
             exit(1);
     }
 } 
@@ -76,10 +75,10 @@ ndarray_t mean (ndarray_t *this, char *axis)
 ndarray_t variance (ndarray_t *this, char *axis)
 {
     isnull(this);
+    ndarray_t x_ = mean(this, axis);
     
     if(strcmp("x", axis)==0)
     {
-        ndarray_t x_ = mean(this, axis);
         ndarray_t result = array(this->shape[0], 1);
         double temp=0;
 
@@ -98,7 +97,6 @@ ndarray_t variance (ndarray_t *this, char *axis)
     }
     else if (strcmp("y", axis)==0)
     {
-        ndarray_t x_ = mean(this, axis);
         ndarray_t result = array(1, this->shape[1]);
         double temp=0;
 
@@ -117,7 +115,6 @@ ndarray_t variance (ndarray_t *this, char *axis)
     }
     else if (strcmp("all", axis)==0)
     {
-        ndarray_t x_ = mean(this, axis);
         ndarray_t result = array(1, 1);
 
         if(this->size  == 0)    
@@ -141,8 +138,6 @@ ndarray_t variance (ndarray_t *this, char *axis)
     { 
         fprintf(stderr, "Unkown Axis\n");
         perror("Provide a valid axis\n");
-
-        clean(this, NULL);
         exit(1);
     }  
 }
@@ -186,7 +181,6 @@ ndarray_t std(ndarray_t *this, char *axis)
     else
     {
        axis_error(axis);
-       clean(this, NULL);
        exit(1);
     }
 }

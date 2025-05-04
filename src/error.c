@@ -6,17 +6,28 @@ void axis_error(char *axis)
 {
     // Print error message for axis error
     fprintf(stderr, "AXIS ERROR\n");
+    TRACE();
     // Print details about the unknown axis causing the error
     fprintf(stderr, "UNKNOWN AXIS: %s\n", axis);
     // Exit the program with failure status
     exit(EXIT_FAILURE);
 }
 
+void not_null_error()
+{
+    // Print error message for shape error
+    fprintf(stderr, "NOT NULL ERROR\n");
+    // Print details about why shape error occurred
+    perror("Function requires null parameters\n");
+    // Exit the program with failure status
+    exit(EXIT_FAILURE);
+}
 
 // Function to handle shape error
 void shape_error()
 {
     // Print error message for shape error
+    TRACE();
     fprintf(stderr, "SHAPE ERROR\n");
     // Print details about why shape error occurred
     perror("Number of rows or columns cannot be zero\n");
@@ -28,6 +39,7 @@ void shape_error()
 void range_error(int max, int min)
 {
     // Print error message for range error
+    TRACE();
     fprintf(stderr, "RANGE ERROR\n");
     // Print details about the range error
     fprintf(stderr, "MAXIMUM VALUE (%d) IS LESS THAN MINIMUM VALUE (%d)\n", max, min);
@@ -39,6 +51,7 @@ void range_error(int max, int min)
 void order_error(char *order)
 {
     // Print error message for order error
+    TRACE();
     fprintf(stderr, "ORDER ERROR\n");
     // Print details about the ambiguous order causing the error
     fprintf(stderr, "AMBIGUOUS ORDER: %s\n", order);
@@ -50,11 +63,10 @@ void order_error(char *order)
 void dimension_error(ndarray_t *this, size_t new_cols, size_t new_rows)
 {
     // Print error message for dimension error during reshape
+    TRACE();
     fprintf(stderr, "SHAPE ERROR\n");
     // Print details about the invalid dimensions for reshape operation
     fprintf(stderr, "INVALID DIMENSIONS: %ldx%ld AND %ldx%ld\n", this->shape[0], this->shape[1], new_cols, new_rows);
-    // Clean up resources
-    clean(this, NULL);
     // Exit the program with failure status
     exit(EXIT_FAILURE);
 }
@@ -63,6 +75,7 @@ void dimension_error(ndarray_t *this, size_t new_cols, size_t new_rows)
 void index_error()
 {
     // Print error message for indexing error
+    TRACE();
     fprintf(stderr, "INDEXING ERROR\n");
     // Print details about why indexing error occurred
     fprintf(stderr, "INVALID INDICES PROVIDED\n");       
@@ -74,6 +87,7 @@ void index_error()
 void malloc_error()
 {
     // Print error message for memory allocation error
+    TRACE();
     fprintf(stderr, "MEMORY ERROR\n");
     // Print details about why memory allocation failed
     perror("UNABLE TO ALLOCATE MEMORY\n");
@@ -85,6 +99,7 @@ void malloc_error()
 void memory_error(void)
 {
     // Print error message for memory fault error
+    TRACE();
     fprintf(stderr, "MEMORY FAULT\n");
     // Print details about the cause of memory fault
     perror("SIZE OF POINTER EXCEEDS THE MAXIMUM ALLOWED SIZE\n");
@@ -96,6 +111,7 @@ void memory_error(void)
 void null_error()
 {
     // Print error message for null pointer error
+    TRACE();
     fprintf(stderr, "NULL POINTER ERROR\n");
     // Print details about providing a null pointer
     perror("POINTER TO VOID PROVIDED\n");
@@ -108,6 +124,7 @@ void null_error()
 void mat_error()
 {
     // Print error message for matrix error
+    TRACE();
     fprintf(stderr, "MATRIX ERROR\n");
     // Print details about why matrix error occurred
     perror("MATRIX IS NOT SQUARE\n");
@@ -121,6 +138,7 @@ void mat_error()
 void zero_error()
 {
     // Print error message for division by zero error
+    TRACE();
     fprintf(stderr, "DIVISION BY ZERO ERROR\n");
     // Print details about why division by zero occurred
     perror("A DIVISION BY ZERO OCCURRED\n");

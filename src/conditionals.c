@@ -16,7 +16,7 @@ void issquare(ndarray_t *this)
 void isnull(ndarray_t *this)
 {
     // Check if the pointer is null
-    if(this == NULL)
+    if(this->data == NULL || this == NULL)
     {
         // Call null_error function to handle the error
         null_error();

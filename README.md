@@ -66,10 +66,9 @@ This will:
 #include <ndmath/statistics.h>
 
 int main() {
-    ndarray *a = create_array(5);
-    fill_array(a, 1.0); // fill with 1.0
-    printf("Mean: %f\n", mean(a));
-    destroy_array(a);
+    ndarray a = array(5, 5);
+    printf("Mean: %f\n", mean(a, "all"));
+    clean(&a);
     return 0;
 }
 ```
@@ -77,7 +76,7 @@ int main() {
 You can compile it like this:
 
 ```bash
-gcc -Iinclude -Lbuild/lib -lmathutils -o example examples/example.c
+gcc -Iinclude -Lbuild/lib -lmathutils -o example examples/example1.c
 ```
 
 ---

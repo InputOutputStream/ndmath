@@ -14,5 +14,6 @@
     extern void range_error(int max, int min);
     extern void order_error(char *order);
     extern void malloc_error();
+    extern void not_null_error();
 
 #endif // !ERROR

@@ -12,18 +12,19 @@
     extern ndarray_t argmin(ndarray_t *this, char *axis);
     extern ndarray_t argmax(ndarray_t *this, char *axis);
     extern ndarray_t reshape(ndarray_t *this, size_t start, size_t stop);
-    extern ndarray_t trill(double fill, size_t rows, size_t cols);
-    extern ndarray_t trilup(double fill, size_t rows, size_t cols);
+    extern ndarray_t lower_triangle(double fill, size_t rows, size_t cols);
+    extern ndarray_t upper_triangle(double fill, size_t rows, size_t cols);
     extern ndarray_t identity(size_t rows, size_t cols);
     extern ndarray_t copy(ndarray_t *arrayB);
 
     extern ndarray_t bindexing(ndarray_t *this, size_t start, size_t stop);
     extern ndarray_t cslice (ndarray_t *this, size_t col_start, size_t col_stop);
     extern ndarray_t rslice (ndarray_t *this, size_t rows_start, size_t rows_stop);
-    extern ndarray_t cassign(ndarray_t *this, ndarray_t *arrayB, size_t col_index);
-    extern ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t row_index);
+    extern ndarray_t cassign(ndarray_t *this, ndarray_t *arrayB, size_t send_col_index, size_t rec_col_index);
+    extern ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t send_row_index, size_t rec_row_index);
 
     extern ndarray_t repeat(ndarray_t *this, size_t cols);
-
+    extern ndarray_t deepcopy(ndarray_t *src);
+    extern ndarray_t flatten(ndarray_t *this);
 
 #endif

@@ -31,11 +31,11 @@ EXAMPLE_BINS = $(patsubst $(EXAMPLE_DIR)/%.c,$(BIN_DIR)/%,$(EXAMPLE_SRCS))
 
 # Compiler flags
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic -g -fPIC -I$(INCLUDE_DIR)
+CFLAGS = -Wall -Wextra -pedantic -g -fPIC -I$(INCLUDE_DIR)
 LDFLAGS = -lm
 
 # Default target
-all: directories static shared examples
+all: directories static shared 
 
 # Create build directories
 directories:

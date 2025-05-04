@@ -53,7 +53,7 @@
         return result;
     }
 
-    ndarray_t ones (size_t rows, size_t cols)
+    ndarray_t ones(size_t rows, size_t cols)
     {
         ndarray_t result = array(rows, cols);
         for(size_t i=0; i<result.shape[0]; i++)
@@ -65,6 +65,7 @@
         }
         return result;
     }
+
     ndarray_t empty (size_t rows, size_t cols)
     {
         return array(rows, cols);
@@ -77,7 +78,7 @@
             range_error(max, min);
         }
         ndarray_t result = array(rows, cols);
-        double spacing = (double)((max)/result.size);
+        double spacing = ((double)(max - min)) / result.size;
         
         if(strcmp("asc", order)==0)
         {
@@ -182,7 +183,9 @@
         else if (strcmp("all", axis)==0)
         {
             ndarray_t result = array(1, 1);
-            for(int i=0; i<(int)this->shape[0]; i++)
+            result.data[0][0] = this->data[0][0];
+
+            for(int i=1; i<(int)this->shape[0]; i++)
             {
                 for(int j=0; j<(int)this->shape[1]; j++)
                 {
@@ -194,7 +197,6 @@
         }
         else
         { 
-            clean(this, NULL);
             axis_error(axis);
             exit(1);
         } 
@@ -204,7 +206,6 @@
     {
         if(this == NULL)
         {
-            clean(this, NULL);
             null_error();
         }
         if(strcmp("x", axis)==0)
@@ -248,6 +249,7 @@
         else if (strcmp("all", axis)==0)
         {
             ndarray_t result = array(1, 1);
+            result.data[0][0] = this->data[0][0];
             for(int i=0; i<(int)this->shape[0]; i++)
             {
                 for(int j=0; j<(int)this->shape[1]; j++)
@@ -260,14 +262,13 @@
         }
         else
         { 
-            clean(this, NULL);
             axis_error(axis);
             exit(1);
         } 
     }
 
 
-    ndarray_t trill(double fill, size_t rows, size_t cols)
+    ndarray_t lower_triangle(double fill, size_t rows, size_t cols)
     {
         
         ndarray_t result = array(rows, cols);
@@ -302,7 +303,7 @@
         return result;
     }
 
-    ndarray_t trilup(double fill, size_t rows, size_t cols)
+    ndarray_t upper_triangle(double fill, size_t rows, size_t cols)
     {
         ndarray_t result = array(rows, cols);
         for(size_t i=0;i<rows;i++)
@@ -320,7 +321,6 @@
     {
         if(arrayB == NULL)
         {
-            clean(arrayB, NULL);
             null_error();
         }
 
@@ -337,11 +337,7 @@
 
     ndarray_t reshape(ndarray_t *this, size_t new_rows, size_t new_cols)
     {
-        if(this == NULL)
-        {
-            clean(this, NULL);
-            null_error();
-        }
+        isnull(this);
         
         if(new_cols*new_rows != this->size)
         {
@@ -349,131 +345,130 @@
         }
         
         ndarray_t result = array(new_rows, new_cols);
-        size_t index = 0, oindex = 0;
 
-        for(size_t i = 0; i<new_cols; i++)
-        {
-            for(size_t j = 0; j<new_rows; j++)
-            {
-                oindex = i * this->shape[0] + j;
-                result.data[i][j] = this->data[i][oindex];
-                index++;
+        size_t flat_idx = 0;
+        for (size_t i = 0; i < new_rows; i++) {
+            for (size_t j = 0; j < new_cols; j++) {
+                size_t old_i = flat_idx / this->shape[1];
+                size_t old_j = flat_idx % this->shape[1];
+                result.data[i][j] = this->data[old_i][old_j];
+                flat_idx++;
             }
-            index = 0;
         }
 
 
         return result;
     }
-
-
-
-    ndarray_t rslice (ndarray_t *this, size_t rows_start, size_t rows_stop)
-    {
-        if (rows_start >= this->shape[0] || rows_stop > this->shape[0] || rows_start > rows_stop) 
-        {
-            clean(this, NULL);
-            index_error();
-        }
-
-        double **slice = &this->data[rows_start];  // Create a pointer to the row_indexth element
-        double **end = &this->data[rows_stop];    
-        size_t slice_size = end - slice + 1;  // Calculate the size of the slice
-
-        // Iterate over the slice and print its elements
-        ndarray_t result = array(slice_size, this->shape[1]);
-        for (size_t i = 0; i < slice_size; i++)
-        {
-            for(size_t j=0; j<this->shape[1]; j++)
-            {
-                result.data[i][j] = slice[i][j];
+    void copy_block(double **dest, double **src, size_t start_i, size_t stop_i, size_t start_j, size_t stop_j) {
+        for (size_t i = 0; i < stop_i - start_i; i++) {
+            for (size_t j = 0; j < stop_j - start_j; j++) {
+                dest[i][j] = src[start_i + i][start_j + j];
             }
         }
-       return result;
+    }
+    
+    ndarray_t rslice(ndarray_t *this, size_t rows_start, size_t rows_stop) {
+        isnull(this);
+    
+        if (rows_start >= this->shape[0] || rows_stop > this->shape[0] || rows_start > rows_stop) {
+            index_error();
+        }
+    
+        size_t new_rows = rows_stop - rows_start;
+        ndarray_t result = array(new_rows, this->shape[1]);
+    
+        copy_block(result.data, this->data, rows_start, rows_stop, 0, this->shape[1]);
+    
+        return result;
+    }
+    
+    ndarray_t cslice(ndarray_t *this, size_t col_start, size_t col_stop) {
+        isnull(this);
+    
+        if (col_start >= this->shape[1] || col_stop > this->shape[1] || col_start > col_stop) {
+            index_error();
+        }
+    
+        ndarray_t temp = transpose(this);  // cols become rows
+        size_t new_cols = col_stop - col_start;
+    
+        ndarray_t slice = array(new_cols, temp.shape[1]);
+    
+        copy_block(slice.data, temp.data, col_start, col_stop, 0, temp.shape[1]);
+    
+        clean(&temp, NULL);
+        ndarray_t result = transpose(&slice);
+        clean(&slice, NULL);
+    
+        return result;
     }
     
 
 
-    ndarray_t cslice (ndarray_t *this, size_t col_start, size_t col_stop)
+    ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t send_row_index, size_t rec_row_index)
     {
-        //printf("AM STUCK HERE\n");
+        isnull(this);
+        isnull(arrayB);
 
-        if (col_start >= this->shape[1] || col_stop > this->shape[1] || col_start > col_stop) 
+        if(this->shape[1] != arrayB ->shape[1])
         {
-            clean(this, NULL);
-            index_error();        
+            mat_error();
         }
 
-        ndarray_t temp = transpose(this);
+        ndarray_t result = copy(this);
 
-        double **slice = &temp.data[col_start];  // Create a pointer to the ith_col element
-        double **end = &temp.data[col_stop];    
-        size_t slice_size = end - slice + 1;  // Calculate the size of the slice
-
-        // Iterate over the slice and print its elements
-        ndarray_t result = array(slice_size, temp.shape[1]);
-
-        for (size_t i = 0; i <slice_size; i++)
+        for(size_t j=0; j<this->shape[1]; j++)
         {
-            for(size_t j=0; j<temp.shape[1]; j++)
-            {
-                result.data[i][j] = slice[i][j];
-            }
+
+            result.data[rec_row_index][j] = arrayB->data[send_row_index][j];
+        }
+        
+        return result;
+    }
+
+    ndarray_t cassign(ndarray_t *this, ndarray_t *arrayB, size_t send_col_index, size_t rec_col_index)
+    {
+        isnull(this);
+        isnull(arrayB);
+
+        if(this->shape[0] != arrayB->shape[0])
+        {
+            mat_error();
         }
 
-        clean(&temp, NULL);
-        result = transpose(&result);
+        ndarray_t result = copy(this);
+
+        
+        for(size_t i=0;i<result.shape[0];i++)
+        {
+            result.data[i][rec_col_index] = arrayB->data[i][send_col_index];
+        }
+
         return result;
     }
 
 
-
-    ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t row_index)
+    ndarray_t flatten(ndarray_t *this)
     {
-        if(this->shape[1] != arrayB ->shape[1])
-        {
-            clean(this, NULL);
-            clean(arrayB, NULL);
-            mat_error();
-        }
-
-        //size_t k = 0;
-        
-        for(size_t i=0;i<this->shape[0];i++)
-        {
-            for(size_t j=0; j<this->shape[1]; j++)
-            {
-                if(i == row_index)
-                    this->data[i][j] = arrayB->data[0][j];
-            }
-                if(i == row_index)
-                    break;
-        }
-        
-        return *this;
+        size_t rows = this->shape[0];
+        size_t cols = this->shape[1];
+        size_t total = rows * cols;
+    
+        ndarray_t result = array(1, total); // matrice ligne
+        size_t index = 0;
+        for (size_t i = 0; i < rows; i++)
+            for (size_t j = 0; j < cols; j++)
+                result.data[0][index++] = this->data[i][j];
+    
+        return result;
     }
 
-    ndarray_t cassign(ndarray_t *this, ndarray_t *arrayB, size_t col_index)
-    {
-        if(this->shape[0] != arrayB->shape[0])
-        {
-            clean(this, NULL);
-            clean(arrayB, NULL);
-            mat_error();
-            
-        }
-        
-        //size_t k = 0;
 
-        for(size_t i=0;i<this->shape[0];i++)
-        {
-            for(size_t j=0; j<this->shape[1]; j++)
-            {
-                if(j == col_index)
-                    this->data[i][j] = arrayB->data[i][0];
-            }
-        }
-        
-        return *this;
+    ndarray_t deepcopy(ndarray_t *src) {
+        ndarray_t dest = array(src->shape[0], src->shape[1]);
+        for(size_t i = 0; i < src->shape[0]; ++i)
+            for(size_t j = 0; j < src->shape[1]; ++j)
+                dest.data[i][j] = src->data[i][j];
+        return dest;
     }
-
+    

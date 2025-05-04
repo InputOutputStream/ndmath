@@ -109,7 +109,6 @@
         else
         {
             axis_error(axis);
-            clean(this, NULL);
             exit(1);
         }
 
@@ -177,6 +176,13 @@
     #pragma GCC optimize("O3", "unroll-loops")
     void qr(ndarray_t *this, ndarray_t *Q, ndarray_t *R) {
         // Initialize Q and R
+        if(!Q || !R)
+        {
+            not_null_error();    
+        }
+
+        isnull(this);
+
         *Q = zeros(this->shape[0], this->shape[1]);
         *R = zeros(this->shape[1], this->shape[1]);
         
@@ -264,8 +270,6 @@
         {
             fprintf(stderr, "Invalid dimensions %ldx%ld and %ldx%ld for array multiplication\n", this->shape[0], this->shape[1], arrayB->shape[0], arrayB->shape[1]);
             perror("Use valid ndarray_t dimesions please\n");
-            clean(this, NULL);
-            clean(arrayB, NULL);
             exit(1);
         }
     }
@@ -279,7 +283,6 @@
         
         ndarray_t result = array(a->shape[0], b->shape[0]);
 
-        
         // Compute the outer product
         for (size_t i = 0; i < a->shape[0]; i++) 
         {

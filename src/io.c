@@ -78,7 +78,6 @@
                 fprintf(f, "%s;", batch);
            }
                 fprintf(f, "%s\n", batch);
-                //fprintf(f, "\n");           
         }
 
        fclose(f);

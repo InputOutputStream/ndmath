@@ -9,9 +9,10 @@
 
 #pragma GCC push_options
     #pragma GCC optimize("O1,unroll-loops")
-    
-
 /** Array operations */
+
+
+
     ndarray_t sum(ndarray_t *this,  ndarray_t *arrayB)
     {
         isnull(this);
@@ -34,7 +35,6 @@
         {
             fprintf(stderr, "Invalid dimensions %ldx%ld and %ldx%ld for array addition\n", this->shape[0], this->shape[1], arrayB->shape[0], arrayB->shape[1]);
             perror("Use valid ndarray_t dimesions please\n");
-            clean(this, NULL);
             exit(1);
         }
         
@@ -62,7 +62,6 @@
         {
             fprintf(stderr, "Invalid dimensions %ldx%ld and %ldx%ld for array subtraction\n", this->shape[0], this->shape[1], arrayB->shape[0], arrayB->shape[1]);
             perror("Use valid ndarray_t dimesions please\n");
-            clean(this, NULL);
             exit(1);
         }
     }
@@ -118,7 +117,6 @@
                 {
                     fprintf(stderr, "Invalid arithmetic operator %c \n", op);
                     perror("Use valid arithmetic operator please\n");
-                    clean(this, NULL);
                     exit(1);
                 }
             }
@@ -165,7 +163,7 @@
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                 result.data[i][j] = log10(this->data[i][j]);
             }
@@ -173,7 +171,7 @@
         return result;
     }
 
-    #pragma GCC optimize("O3", "unroll-loops")
+    //Creates a new variable containing the transposed version of the previous matrix
     ndarray_t transpose (ndarray_t *this)
     {
         isnull(this);
@@ -187,22 +185,19 @@
                 result.data[j][i] = this->data[i][j];
             }
         }
+
         return result;
     }
 
     ndarray_t power(ndarray_t *this, double exponent)
     {
-        if(this==NULL)
-        {
-            fprintf(stderr, "NULL POINTER\n");
-            perror("POINTER TO VOID PROVIDED\n");
-            exit(1);
-        }
+        isnull(this);
+
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                 result.data[i][j] = pow(this->data[i][j], exponent);
             }
@@ -212,17 +207,13 @@
 
     inline ndarray_t nd_log2(ndarray_t *this)
     {
-        if(this==NULL)
-        {
-            fprintf(stderr, "NULL POINTER\n");
-            perror("POINTER TO VOID PROVIDED\n");
-            exit(1);
-        }
+        isnull(this);
+
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                 result.data[i][j] = log2(this->data[i][j]);
             }
@@ -232,17 +223,13 @@
 
     inline ndarray_t nd_exp(ndarray_t *this)
     {
-        if(this==NULL)
-        {
-            fprintf(stderr, "NULL POINTER\n");
-            perror("POINTER TO VOID PROVIDED\n");
-            exit(1);
-        }
+        isnull(this);
+
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                 result.data[i][j] = exp(this->data[i][j]);
             }
@@ -259,7 +246,7 @@
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                
                 result.data[i][j] = this->data[i][j] * -1;
@@ -276,7 +263,7 @@
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                     result.data[i][j] = this->data[i][j] * this->data[i][j];
             }
@@ -293,7 +280,7 @@
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                 result.data[i][j] = this->data[i][j] * this->data[i][j] * this->data[i][j];
             }
@@ -310,7 +297,7 @@
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                 result.data[i][j] = fabs(this->data[i][j]);
             }
@@ -327,7 +314,7 @@
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
         {
-            for(j=0;this->shape[1]; j++)
+            for(j=0;j<this->shape[1]; j++)
             {
                 result.data[i][j] = sqrt(this->data[i][j]);
             }
