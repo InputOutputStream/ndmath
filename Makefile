@@ -1,5 +1,5 @@
 # Library name and version
-LIB_NAME = mathutils
+LIB_NAME = ndmath
 VERSION = 1.0.0
 SONAME = lib$(LIB_NAME).so.$(VERSION)
 
