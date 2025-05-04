@@ -83,6 +83,7 @@ install: shared static
 	cp $(STATIC_LIB) $(DESTDIR)/usr/local/lib/
 	cp -r $(INCLUDE_DIR)/$(LIB_NAME)/* $(DESTDIR)/usr/local/include/$(LIB_NAME)/
 	ln -sf $(DESTDIR)/usr/local/lib/$(SHARED_LIB) $(DESTDIR)/usr/local/lib/lib$(LIB_NAME).so
+	sudo ldconfig
 
 # Uninstall the library
 uninstall:
