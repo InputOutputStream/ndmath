@@ -168,7 +168,7 @@ make install DESTDIR=/usr/local
 ```
 This copies:
 - Libraries to `/usr/local/lib/`.
-- Headers to `/usr/local/include/mathutils/`.
+- Headers to `/usr/local/include/ndmath/`.
 - Creates a symbolic link for the shared library.
 
 ### 5. Compile a Program
