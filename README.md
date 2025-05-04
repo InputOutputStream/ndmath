@@ -7,28 +7,42 @@ This README is tailored for beginners in C, providing step-by-step instructions 
 ---
 
 ## 📑 Table of Contents
-1. [Overview](#overview)
-2. [Features](#features)
-3. [Prerequisites](#prerequisites)
-4. [Installation](#installation)
-5. [Library Structure](#library-structure)
-6. [Core Concepts](#core-concepts)
-7. [Getting Started](#getting-started)
-8. [Functionalities](#functionalities)
-   - [Array Creation](#array-creation)
-   - [Input/Output Operations](#inputoutput-operations)
-   - [Mathematical Operations](#mathematical-operations)
-   - [Linear Algebra](#linear-algebra)
-   - [Statistics](#statistics)
-   - [Random Number Generation](#random-number-generation)
-   - [Trigonometric Functions](#trigonometric-functions)
-9. [Error Handling](#error-handling)
-10. [Integration in External Projects](#integration-in-external-projects)
-11. [Testing](#testing)
-12. [Example Program](#example-program)
-13. [Troubleshooting](#troubleshooting)
-14. [Contributing](#contributing)
-15. [Cleaning Up](#cleaning-up)
+- [🧮 NDMath - Numerical \& Data Math Library](#-ndmath---numerical--data-math-library)
+  - [📑 Table of Contents](#-table-of-contents)
+  - [🌟 Overview](#-overview)
+  - [🚀 Features](#-features)
+  - [🛠 Prerequisites](#-prerequisites)
+  - [📦 Installation](#-installation)
+    - [1. Download the Source](#1-download-the-source)
+    - [2. Directory Structure](#2-directory-structure)
+    - [3. Build the Library](#3-build-the-library)
+      - [Using the Makefile](#using-the-makefile)
+      - [Manual Compilation](#manual-compilation)
+    - [4. Install the Library (Optional)](#4-install-the-library-optional)
+    - [5. Compile a Program](#5-compile-a-program)
+  - [📂 Library Structure](#-library-structure)
+  - [🧠 Core Concepts](#-core-concepts)
+  - [🚀 Getting Started](#-getting-started)
+  - [📚 Functionalities](#-functionalities)
+    - [Array Creation](#array-creation)
+    - [Input/Output Operations](#inputoutput-operations)
+    - [Mathematical Operations](#mathematical-operations)
+    - [Linear Algebra](#linear-algebra)
+    - [Statistics](#statistics)
+    - [Random Number Generation](#random-number-generation)
+    - [Trigonometric Functions](#trigonometric-functions)
+  - [⚠️ Error Handling](#️-error-handling)
+  - [🔗 Integration in External Projects](#-integration-in-external-projects)
+    - [1. Static Linking (`libndmath.a`)](#1-static-linking-libndmatha)
+    - [2. Dynamic Linking (`libndmath.so`)](#2-dynamic-linking-libndmathso)
+    - [3. Direct Source Inclusion](#3-direct-source-inclusion)
+    - [Makefile for External Projects](#makefile-for-external-projects)
+    - [Verifying the Library](#verifying-the-library)
+  - [🧪 Testing](#-testing)
+  - [📦 Example Program](#-example-program)
+  - [🔍 Troubleshooting](#-troubleshooting)
+  - [🤝 Contributing](#-contributing)
+  - [🧹 Cleaning Up](#-cleaning-up)
 
 ---
 
@@ -121,8 +135,8 @@ Run:
 make all
 ```
 This creates:
-- `build/lib/libmathutils.a` (static library).
-- `build/lib/libmathutils.so` (shared library).
+- `build/lib/libndmath.a` (static library).
+- `build/lib/libndmath.so` (shared library).
 - Object files in `build/obj/`.
 
 To build only the static library:
@@ -483,7 +497,7 @@ Use `isnull(&arr)` to check for null pointers before operations.
 
 NDMath can be integrated into external projects using three methods: static linking, dynamic linking, or direct source inclusion.
 
-### 1. Static Linking (`libmathutils.a`)
+### 1. Static Linking (`libndmath.a`)
 Static linking embeds the library into your binary, eliminating runtime dependencies.
 
 **Steps**:
@@ -491,7 +505,7 @@ Static linking embeds the library into your binary, eliminating runtime dependen
    ```bash
    make static
    ```
-   This creates `build/lib/libmathutils.a`.
+   This creates `build/lib/libndmath.a`.
 
 2. Include headers in your program:
    ```c
@@ -510,7 +524,7 @@ Static linking embeds the library into your binary, eliminating runtime dependen
    ./my_program
    ```
 
-### 2. Dynamic Linking (`libmathutils.so`)
+### 2. Dynamic Linking (`libndmath.so`)
 Dynamic linking allows library updates without recompiling your program.
 
 **Steps**:
@@ -518,7 +532,7 @@ Dynamic linking allows library updates without recompiling your program.
    ```bash
    make shared
    ```
-   This creates `build/lib/libmathutils.so`.
+   This creates `build/lib/libndmath.so`.
 
 2. Include headers as above.
 
@@ -583,8 +597,8 @@ my_project/
 │   ├── ...
 ├── build/
 │   ├── lib/
-│   │   ├── libmathutils.a
-│   │   ├── libmathutils.so
+│   │   ├── libndmath.a
+│   │   ├── libndmath.so
 ├── my_program.c
 ├── Makefile
 ```
@@ -592,9 +606,9 @@ my_project/
 ### Verifying the Library
 Check if functions are available:
 ```bash
-nm -g build/lib/libmathutils.a | grep randu
+nm -g build/lib/libndmath.a | grep randu
 # or
-nm -D build/lib/libmathutils.so | grep randu
+nm -D build/lib/libndmath.so | grep randu
 ```
 Look for symbols like `randu`, `randn`, etc.
 
