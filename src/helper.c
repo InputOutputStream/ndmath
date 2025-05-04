@@ -77,6 +77,12 @@
         }
     }
 
+    void free_array(ndarray_t *this)
+    {
+        clean(this, NULL);
+        return;
+    }
+
     void print_all_arrays(named_array_t* arrays, size_t count)
     {
         if (!arrays) return;

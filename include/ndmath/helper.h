@@ -5,11 +5,11 @@
 #include "ndarray.h"
 
 
-void clean(ndarray_t* arr, ...);
-void print_array(ndarray_t a, size_t dp);
+extern void clean(ndarray_t* arr, ...);
+extern  void print_array(ndarray_t a, size_t dp);
+extern  void free_array(ndarray_t *this);
 
-
-void clean_all_arrays(named_array_t* arrays, size_t count);
-void print_all_arrays(named_array_t* arrays, size_t count);
+extern  void clean_all_arrays(named_array_t* arrays, size_t count);
+extern  void print_all_arrays(named_array_t* arrays, size_t count);
 
 #endif
