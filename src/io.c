@@ -2,11 +2,16 @@
 #include <ndmath/error.h>
 #include <ndmath/array.h>
 
-    ndarray_t load_ndarray(char *absolute_path)
+    ndarray_t load_ndarray(char *absolute_path, long batch_size)
     {
+        if (batch_size == -1)
+        {
+            batch_size = __MAX__LINES__NUMBER__;
+        }
+
         size_t i = 0;
         char batch[__MAX__LINE__LENGTH__];
-        double List[__MAX__LINES__NUMBER__][__MAX__LINE__LENGTH__];
+        double List[batch_size][__MAX__LINE__LENGTH__];
         char *token;
         FILE *f = fopen(absolute_path, "r");
 
@@ -20,7 +25,7 @@
         bool first_line = true;
 
         
-        while((fgets(batch, sizeof(batch), f) != NULL) && (nb_lines < __MAX__LINES__NUMBER__))
+        while((fgets(batch, sizeof(batch), f) != NULL) && (nb_lines < batch_size))
         {     
             token = strtok(batch, ";");
             while (token != NULL)
