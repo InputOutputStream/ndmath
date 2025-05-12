@@ -1,13 +1,11 @@
 #ifndef IO
 #define IO
 
-    #include "ndarray.h"
-
-    const size_t __MAX__LINE__LENGTH__ = 1000000000;
-    const size_t __MAX__LINES__NUMBER__ = 100;
+    #include <ndmath/ndarray.h>
 
 
-    extern ndarray_t load_ndarray(char *absolute_path, long batch_size);
+    extern ndarray_t load_ndarray(const char *absolute_path, size_t batch_size);
     extern void save_ndarray(ndarray_t *this, char *absolute_path);
 
+    // Load a dataframe from a CSV file with batch size
 #endif

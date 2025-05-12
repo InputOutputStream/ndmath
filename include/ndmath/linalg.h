@@ -1,7 +1,7 @@
 #ifndef LINALG
 #define LINALG
 
-    #include "ndarray.h"
+    #include <ndmath/ndarray.h>
    
 
     extern double det(ndarray_t *this);

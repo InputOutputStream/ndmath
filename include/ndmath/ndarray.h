@@ -11,12 +11,21 @@
 
 typedef struct ndarray
 {
-    size_t shape[3];  // Example: 2-dimensional array
-    double** data;     // Example: Array of double values
+    size_t shape[3];  // 2-dimensional array
+    double** data;     // Array of double values
     struct ndarray *next;
     size_t size;
 
 } ndarray_t;
+
+
+typedef struct ndarray_data_loader
+{
+    size_t lines;
+    size_t rows;
+    double **data;
+}ndarray_data_loader;
+
 
 /*
 
@@ -38,7 +47,7 @@ typedef struct dim
     size_t rows;
 }dim_t;
 
-
+// Error handling struct
 //To be implemented 
 typedef enum {
     ND_SUCCESS,
