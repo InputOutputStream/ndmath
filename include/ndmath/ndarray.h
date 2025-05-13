@@ -9,6 +9,7 @@
 #include <stdarg.h>
 #include <errno.h>
 
+
 typedef struct ndarray
 {
     size_t shape[3];  // 2-dimensional array
@@ -40,6 +41,12 @@ typedef struct {
     ndarray_t* array;
 } named_array_t;
 
+
+typedef struct image {
+    ndarray_t *c1;
+    ndarray_t *c2;
+    ndarray_t *c3;
+} image_t;
 
 typedef struct dim
 {

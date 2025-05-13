@@ -2,7 +2,10 @@
 #include <ndmath/error.h>
 #include <ndmath/array.h>
 #include <ndmath/conditionals.h>
-
+#include <sys/stat.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <ndmath/ndarray.h>
 
     const size_t __MAX__LINE__LENGTH__ = 4096;
     const size_t __MAX__LINES__NUMBER__ = 1024;
@@ -181,6 +184,134 @@
         }
 
        fclose(f);
+    }
+
+    image_t fake_image2array(const char *absolute_path)
+    {
+        FILE *f = fopen(absolute_path, "r");
+        if (f == NULL) {
+            null_error();
+        }
+        
+        // Variables pour les dimensions
+        size_t rows = 0;
+        size_t cols = 0;
+        size_t channels = 0;
+        
+        // Lire la première ligne pour obtenir les dimensions
+        // Essayer différents formats de lecture
+
+        
+        char line_buffer[1024];
+        if (fgets(line_buffer, sizeof(line_buffer), f)) {
+            // Essayer d'abord le format avec espaces
+            int result = sscanf(line_buffer, "%zu %zu %zu", &rows, &cols, &channels);
+            
+            // Si ça n'a pas fonctionné, essayer avec des virgules
+            if (result != 3) {
+                result = sscanf(line_buffer, "%zu,%zu,%zu", &rows, &cols, &channels);
+            }
+
+            // Si ça n'a pas fonctionné, essayer avec des ;
+            if (result != 3) {
+                result = sscanf(line_buffer, "%zu;%zu;%zu", &rows, &cols, &channels);
+            }
+            
+            // Vérifier si la lecture a réussi
+            if (result != 3) {
+                printf("Erreur: Impossible de lire les dimensions dans la première ligne: %s\n", line_buffer);
+                fclose(f);
+                null_error();
+            }
+            
+            // Afficher les dimensions pour déboguer
+            printf("Dimensions lues: rows=%zu, cols=%zu, channels=%zu\n", rows, cols, channels);
+        } else {
+            fclose(f);
+            null_error();
+        }
+        
+        // Vérifier que les dimensions sont valides
+        if (rows == 0 || cols == 0 || channels == 0 || channels > 3) {
+            printf("Erreur: Dimensions invalides: rows=%zu, cols=%zu, channels=%zu\n", rows, cols, channels);
+            fclose(f);
+            null_error();
+        }
+
+        // Afficher les premières lignes pour déboguer
+        rewind(f);
+        for (int i = 0; i < 5; i++) {
+            if (fgets(line_buffer, sizeof(line_buffer), f)) {
+                printf("Ligne %d: %s", i+1, line_buffer);
+            } else {
+                break;
+            }
+        }
+        rewind(f);
+        
+        // Créer les tableaux avec les dimensions appropriées
+        ndarray_t *c1 = malloc(sizeof(ndarray_t));
+        ndarray_t *c2 = malloc(sizeof(ndarray_t));
+        ndarray_t *c3 = malloc(sizeof(ndarray_t));
+        
+        if (!c1 || !c2 || !c3) {
+            // Gérer l'échec d'allocation
+            if (c1) free(c1);
+            if (c2) free(c2);
+            if (c3) free(c3);
+            fclose(f);
+            null_error();
+        }
+        
+        *c1 = array(rows, cols);
+        *c2 = array(rows, cols);
+        *c3 = array(rows, cols);
+        
+        // Lire les données
+        char *line = NULL;
+        size_t len = 0;
+        ssize_t read;
+        size_t i = 0;
+        
+        // Sauter la première ligne qui contient les dimensions
+        // (déjà lue par fgets ci-dessus)
+        
+        while ((read = getline(&line, &len, f)) != -1 && i < rows) {
+            char *token = strtok(line, " ,\t\n");  // Accepter plusieurs délimiteurs possibles
+            size_t j = 0;
+            
+            while (token != NULL && j < cols) {
+                if (channels >= 1) {
+                    sscanf(token, "%lf", &c1->data[i][j]);
+                    token = strtok(NULL, " ,\t\n");
+                }
+                
+                if (channels >= 2 && token != NULL) {
+                    sscanf(token, "%lf", &c2->data[i][j]);
+                    token = strtok(NULL, " ,\t\n");
+                }
+                
+                if (channels >= 3 && token != NULL) {
+                    sscanf(token, "%lf", &c3->data[i][j]);
+                    token = strtok(NULL, " ,\t\n");
+                }
+                
+                j++;
+            }
+            
+            i++;
+        }
+        
+        // Libérer la mémoire
+        free(line);
+        fclose(f);
+
+        image_t img;
+        img.c1 = c1;
+        img.c2 = c2;
+        img.c3 = c3;
+
+        return img;
     }
 /*
     Above methods are used on ndarrays and the below ones on dataframes
