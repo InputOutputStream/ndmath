@@ -13,13 +13,13 @@
     // Detect the delimiter in a CSV file
     static char detect_delimiter(const char *path) {
         FILE *file = fopen(path, "r");
-        if (!file) {
+        if (file == NULL) {
             fprintf(stderr, "ERROR: Could not open file %s\n", path);
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         char line[__MAX__LINE__LENGTH__];
-        if (!fgets(line, __MAX__LINE__LENGTH__, file)) {
+        if (fgets(line, __MAX__LINE__LENGTH__, file) == NULL) {
             fclose(file);
             fprintf(stderr, "ERROR: Empty file %s\n", path);
             exit(1);

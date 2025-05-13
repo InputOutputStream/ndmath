@@ -8,7 +8,7 @@
 
 #define MAX_DP 32
 
-    static __always_inline void dpformat(float val, size_t dp)
+    static inline void dpformat(float val, size_t dp)
     {
         if (dp > MAX_DP) dp = MAX_DP;
         
@@ -17,7 +17,14 @@
         printf(format, val);
     }
 
-    __always_inline void print_array(ndarray_t a, size_t dp)
+    inline void print_named_array(ndarray_t a, char *name, size_t dp)
+    {
+        printf("%s:\n", name);
+        print_array(a, dp);
+        return;
+    }
+
+    inline void print_array(ndarray_t a, size_t dp)
     {
         if (dp > MAX_DP) dp = MAX_DP;
     
