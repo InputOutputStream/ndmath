@@ -31,6 +31,16 @@ This README is tailored for beginners in C, providing step-by-step instructions 
     - [Statistics](#statistics)
     - [Random Number Generation](#random-number-generation)
     - [Trigonometric Functions](#trigonometric-functions)
+    - [Image processing](#image-processing)
+- [Image to Matrix](#image-to-matrix)
+  - [Features](#features)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+    - [Install Dependencies](#install-dependencies)
+    - [For Example](#for-example)
+  - [API Reference](#api-reference)
+    - [Types](#types)
+    - [Functions](#functions)
   - [⚠️ Error Handling](#️-error-handling)
   - [🔗 Integration in External Projects](#-integration-in-external-projects)
     - [1. Static Linking (`libndmath.a`)](#1-static-linking-libndmatha)
@@ -472,6 +482,88 @@ NDMath uses a 64-bit LCG for random number generation, ensuring deterministic se
   ```
 
 ---
+
+### Image processing
+
+# Image to Matrix
+
+This library provides functionality to convert various image formats (BMP, JPEG, PNG) into a matrix representation for image processing in C.
+
+## Features
+
+- Support for multiple image formats:
+  - BMP
+  - JPEG
+  - PNG
+- Easy-to-use API for converting images to matrices
+- Handles color and grayscale images
+- Memory-efficient implementation
+- Proper error handling
+
+## Dependencies
+
+The library requires the following dependencies:
+- libjpeg (for JPEG support)
+- libpng (for PNG support)
+
+## Installation
+
+### Install Dependencies
+
+For Debian/Ubuntu:
+```bash
+sudo apt-get install libjpeg-dev libpng-dev 
+```
+
+For Fedora/RHEL:
+```bash
+sudo dnf install libjpeg-devel libpng-devel
+```
+
+For macOS (using Homebrew):
+```bash
+brew install libjpeg libpng
+```
+
+### For Example
+```c
+#include "image.h"
+
+int main() {
+    // Load an image into a matrix
+    image_matrix_t* matrix = image_to_matrix("image.jpg");
+
+    if (matrix) {
+        // Access pixel data
+        pixel_t pixel = matrix->data[y][x];
+        
+        // Process the image...
+        
+        // Display some information
+        print_matrix_info(matrix);
+        
+        // Free the matrix when done
+        free_image_matrix(matrix);
+    }
+    
+    return 0;
+}
+```
+
+## API Reference
+
+### Types
+
+- `pixel_t`: Represents an RGB pixel with r, g, b components.
+- `image_matrix_t`: Contains the pixel data and dimensions of an image.
+
+### Functions
+
+- `image_matrix_t* createimage_matrix_t(int width, int height)`: Create a new image matrix.
+- `void free_image_matrix(image_matrix_t* matrix)`: Free memory allocated to an image matrix.
+- `image_matrix_t* image_to_matrix(const char* filename)`: Convert any supported image file to a matrix.
+- `void print_matrix_info(image_matrix_t* matrix)`: Print information about an image matrix.
+
 
 ## ⚠️ Error Handling
 

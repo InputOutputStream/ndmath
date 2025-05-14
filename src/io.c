@@ -122,7 +122,11 @@
 
         // Allocate the array
         ndarray_t arr = array(rows, cols);
-        isnull(&arr);
+        if(isnull(&arr))
+        {
+            null_error();
+        }
+
 
         // Read and parse the file
         size_t row = 0;
@@ -186,7 +190,7 @@
        fclose(f);
     }
 
-    image_t fake_image2array(const char *absolute_path)
+    nd_image_t fake_image2array(const char *absolute_path)
     {
         FILE *f = fopen(absolute_path, "r");
         if (f == NULL) {
@@ -306,15 +310,13 @@
         free(line);
         fclose(f);
 
-        image_t img;
+        nd_image_t img;
         img.c1 = c1;
         img.c2 = c2;
         img.c3 = c3;
 
         return img;
     }
-/*
-    Above methods are used on ndarrays and the below ones on dataframes
-*/
+
 
     

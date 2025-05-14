@@ -17,7 +17,7 @@
   
         ndarray_t arr = {0};
         arr.data = (double **)malloc(sizeof(double*) * rows);
-        if(arr.data == NULL)
+        if(isnull(&arr))
         {
             malloc_error();
         }
@@ -319,9 +319,10 @@
 
     ndarray_t copy(ndarray_t *arrayB)
     {
-        if(arrayB == NULL)
+        if(isnull(arrayB))
         {
             null_error();
+            exit(EXIT_FAILURE);
         }
 
         ndarray_t result = array(arrayB->shape[0], arrayB->shape[1]);
@@ -337,7 +338,11 @@
 
     ndarray_t reshape(ndarray_t *this, size_t new_rows, size_t new_cols)
     {
-        isnull(this);
+        if(isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
         
         if(new_cols*new_rows != this->size)
         {
@@ -368,7 +373,12 @@
     }
     
     ndarray_t rslice(ndarray_t *this, size_t rows_start, size_t rows_stop) {
-        isnull(this);
+        if (isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
     
         if (rows_start >= this->shape[0] || rows_stop > this->shape[0] || rows_start > rows_stop) {
             index_error();
@@ -383,7 +393,13 @@
     }
     
     ndarray_t cslice(ndarray_t *this, size_t col_start, size_t col_stop) {
-        isnull(this);
+        
+        if (isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
     
         if (col_start >= this->shape[1] || col_stop > this->shape[1] || col_start > col_stop) {
             index_error();
@@ -407,8 +423,18 @@
 
     ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t send_row_index, size_t rec_row_index)
     {
-        isnull(this);
-        isnull(arrayB);
+        if (isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
+        if (isnull(arrayB))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
 
         if(this->shape[1] != arrayB ->shape[1])
         {
@@ -428,8 +454,17 @@
 
     ndarray_t cassign(ndarray_t *this, ndarray_t *arrayB, size_t send_col_index, size_t rec_col_index)
     {
-        isnull(this);
-        isnull(arrayB);
+        if (isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
+        if (isnull(arrayB))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
 
         if(this->shape[0] != arrayB->shape[0])
         {

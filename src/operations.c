@@ -15,8 +15,10 @@
 
     ndarray_t sum(ndarray_t *this,  ndarray_t *arrayB)
     {
-        isnull(this);
-        isnull(arrayB);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        if(isnull(arrayB))
+            {null_error(); exit(EXIT_FAILURE);}
 
         ndarray_t result = {0};
         if(this->shape[0] == arrayB->shape[0] && this->shape[1] == arrayB->shape[1])
@@ -42,8 +44,11 @@
 
     ndarray_t subtract (ndarray_t *this, ndarray_t *arrayB)
     {
-        isnull(this);
-        isnull(arrayB);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        if(isnull(arrayB))
+            {null_error(); exit(EXIT_FAILURE);}
+
         
         ndarray_t result  = {0};
         if(this->shape[0] == arrayB->shape[0] && this->shape[1] == arrayB->shape[1])
@@ -70,7 +75,9 @@
 
     ndarray_t ravel(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+       
         
         int i, j, k=0;
         ndarray_t result = array(1, this->size);
@@ -89,8 +96,9 @@
 
     ndarray_t scaler (ndarray_t *this, double sc, char op)
     {
-        isnull(this);
-        
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+       
         int i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<(int)this->shape[0]; i++)
@@ -126,8 +134,11 @@
 
     ndarray_t divide(ndarray_t *this, ndarray_t *arrayB)
     {
-        isnull(this);
-        isnull(arrayB);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        if(isnull(arrayB))
+            {null_error(); exit(EXIT_FAILURE);}
+
         
         if(this->shape[0] != arrayB->shape[0] || this->shape[1] != arrayB->shape[1])
         {
@@ -157,8 +168,9 @@
   
     ndarray_t nd_log(ndarray_t *this)
     {
-        isnull(this);
-
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
@@ -174,8 +186,9 @@
     //Creates a new variable containing the transposed version of the previous matrix
     ndarray_t transpose (ndarray_t *this)
     {
-        isnull(this);
-        
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+       
         int i, j;
         ndarray_t result = array(this->shape[1], this->shape[0]);
         for(i=0; i<(int)this->shape[0]; i++)
@@ -191,8 +204,9 @@
 
     ndarray_t power(ndarray_t *this, double exponent)
     {
-        isnull(this);
-
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+       
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
         for(i=0; i<this->shape[0]; i++)
@@ -207,7 +221,9 @@
 
     inline ndarray_t nd_log2(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
 
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
@@ -223,7 +239,9 @@
 
     inline ndarray_t nd_exp(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
 
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
@@ -240,7 +258,9 @@
     
     inline ndarray_t neg(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
 
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
@@ -257,7 +277,9 @@
 
     inline ndarray_t square(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
 
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
@@ -274,7 +296,9 @@
     
     inline ndarray_t cube(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
 
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
@@ -291,7 +315,9 @@
     
     inline ndarray_t nd_abs(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
 
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);
@@ -308,7 +334,9 @@
     
     inline ndarray_t nd_sqrt(ndarray_t *this)
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
         
         size_t i, j;
         ndarray_t result = array(this->shape[0], this->shape[1]);

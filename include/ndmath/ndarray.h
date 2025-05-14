@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <errno.h>
-
+#include <stdint.h>
 
 typedef struct ndarray
 {
@@ -42,11 +42,55 @@ typedef struct {
 } named_array_t;
 
 
-typedef struct image {
+//RGB Pixel Value
+typedef struct pixel
+{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b; 
+} pixel_t;
+
+//Store Image matrix 
+typedef struct image_matrix
+{
+    pixel_t **data;
+    int width, height;
+} image_matrix_t;
+
+
+//BMP file Header
+//#pragma push(push 2)
+    typedef struct bmp_header
+    {
+        uint16_t signature; // BM for BMP ?
+        uint32_t file_size; // Size of BMP file in bytes
+        uint16_t reserved; // Reserved
+        uint16_t reserved2; // Reserved
+        uint16_t data_offset; // Offset to te image data
+    }bmp_header_t;
+
+    // Structure for BMP info header
+    typedef struct bmp_info_header {
+        uint32_t header_size;     // Size of this header in bytes
+        int32_t  width;          // Width of the image
+        int32_t  height;         // Height of the image
+        uint16_t planes;         // Number of color planes
+        uint16_t bits_per_pixel;   // Bits per pixel
+        uint32_t compression;    // Compression method
+        uint32_t image_size;      // Size of the image data
+        int32_t  x_pixels_perM;    // Horizontal resolution
+        int32_t  y_pixels_perM;    // Vertical resolution
+        uint32_t colors_used;     // Number of colors in the color palette
+        uint32_t colors_important;// Number of important colors
+    } bmp_info_header_t;
+//#pragma pack(pop)
+
+
+typedef struct nd_image {
     ndarray_t *c1;
     ndarray_t *c2;
     ndarray_t *c3;
-} image_t;
+} nd_image_t;
 
 typedef struct dim
 {

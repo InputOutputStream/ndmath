@@ -10,8 +10,10 @@
 
     ndarray_t inv(ndarray_t *this)
     {
-        isnull(this);
-        issquare(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        if(issquare(this))
+            {shape_error(); exit(EXIT_FAILURE);}
 
         ndarray_t I = identity(this->shape[0], this->shape[1]);
         ndarray_t arr = copy(this);
@@ -50,7 +52,8 @@
 
     ndarray_t norm(ndarray_t *this, char *axis) // Calculates only Euclidean distance
     {
-        isnull(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
         double temp=0;
 
         if(strcmp(axis, "x")==0)
@@ -116,7 +119,9 @@
 
     double det(ndarray_t *this) 
     {
-        issquare(this);
+        if(issquare(this))
+            {shape_error(); exit(EXIT_FAILURE);}
+
         double determinant = 1.0;
 
         ndarray_t arr = array(this->shape[0], this->shape[1]);
@@ -181,8 +186,9 @@
             not_null_error();    
         }
 
-        isnull(this);
-
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        
         *Q = zeros(this->shape[0], this->shape[1]);
         *R = zeros(this->shape[1], this->shape[1]);
         
@@ -245,8 +251,10 @@
     #pragma GCC optimize("O3", "unroll-loops")
     ndarray_t matmul(ndarray_t *this, ndarray_t *arrayB)
     {
-        isnull(this);
-        isnull(arrayB);
+       if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        if(isnull(arrayB))
+            {null_error(); exit(EXIT_FAILURE);}
 
         ndarray_t result  = {0};
         if(this->shape[1] == arrayB->shape[0])
@@ -311,8 +319,10 @@
     #pragma GCC optimize("O3", "unroll-loops")
     ndarray_t eig(ndarray_t *this, size_t niters)
     {
-        isnull(this);
-        issquare(this);
+        if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+        if(issquare(this))
+            {shape_error(); exit(EXIT_FAILURE);}
         
         const size_t n = this->shape[0];
         ndarray_t Q = zeros(n, n);

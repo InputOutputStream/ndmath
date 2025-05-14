@@ -8,7 +8,9 @@
 
 ndarray_t mean (ndarray_t *this, char *axis)
 {
-    isnull(this);
+    if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+
     
     double temp = 0;
     if(strcmp(axis, "x") == 0)
@@ -74,7 +76,9 @@ ndarray_t mean (ndarray_t *this, char *axis)
 
 ndarray_t variance (ndarray_t *this, char *axis)
 {
-    isnull(this);
+    if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+
     ndarray_t x_ = mean(this, axis);
     
     if(strcmp("x", axis)==0)
@@ -147,7 +151,9 @@ ndarray_t variance (ndarray_t *this, char *axis)
 
 ndarray_t std(ndarray_t *this, char *axis)
 {
-    isnull(this);
+    if(isnull(this))
+            {null_error(); exit(EXIT_FAILURE);}
+
     
     if(strcmp("x", axis) == 0)
     {

@@ -15,5 +15,7 @@
     extern void order_error(char *order);
     extern void malloc_error();
     extern void not_null_error();
+    extern void row_col_error();
+    extern void null_matrix_data_rows();
 
 #endif // !ERROR

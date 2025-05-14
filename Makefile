@@ -32,7 +32,7 @@ EXAMPLE_BINS = $(patsubst $(EXAMPLE_DIR)/%.c,$(BIN_DIR)/%,$(EXAMPLE_SRCS))
 # Compiler flags
 CC = gcc
 CFLAGS = -Wall -Wextra -pedantic -g -fPIC -I$(INCLUDE_DIR)
-LDFLAGS = -lm
+LDFLAGS = -lm -ljpeg -lpng -lexif -lm
 
 # Default target
 all: directories static shared 
@@ -97,3 +97,4 @@ run-tests: tests
 	LD_LIBRARY_PATH=$(LIB_DIR):$(LD_LIBRARY_PATH) $(TEST_BIN)
 
 .PHONY: all directories static shared tests examples clean install uninstall run-tests
+
