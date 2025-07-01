@@ -26,5 +26,11 @@
     extern ndarray_t repeat(ndarray_t *this, size_t cols);
     extern ndarray_t deepcopy(ndarray_t *src);
     extern ndarray_t flatten(ndarray_t *this);
+    extern ndarray_t get_lines(ndarray_t *this, int *line_numbers, int number);
+    extern void set(ndarray_t *this, size_t row, size_t col, double value);
+    extern void fill(ndarray_t *this, double value);
+    extern double get(ndarray_t *this, size_t row, size_t col);
+    extern ndarray_t get_lines(ndarray_t *this, int *line_numbers, int number);
+    extern ndarray_t row_index(ndarray_t *this, int row);
 
 #endif

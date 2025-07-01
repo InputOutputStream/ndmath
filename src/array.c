@@ -135,48 +135,41 @@
         return result;
     }
 
-
     ndarray_t argmin(ndarray_t *this, char *axis)
     {
         if(this == NULL)
         {
             null_error();
         }
-        if(strcmp("x", axis)==0)
+        if(strcmp("x", axis)==0)  // Min along rows (for each row)
         {
             ndarray_t result = array(this->shape[0], 1);
-            double temp=this->data[0][0];
 
             for(int i=0; i<(int)this->shape[0]; i++)
             {
+                double temp = this->data[i][0];  // Initialize with first element of row
                 for(int j=1; j<(int)this->shape[1]; j++)
                 {
                     if(this->data[i][j] < temp)
-                            temp = this->data[i][j];
+                        temp = this->data[i][j];
                 }
                 result.data[i][0] = temp;
-                
-                if(i+1 < (int)this->shape[0])
-                    temp = this->data[i+1][0];
             }
             return result;
         }
-        else if (strcmp("y", axis)==0)
+        else if (strcmp("y", axis)==0)  // Min along columns (for each column)
         {
             ndarray_t result = array(1, this->shape[1]);
-            double temp=this->data[0][0];
 
-            for(int i=0; i<(int)this->shape[1]; i++)
+            for(int j=0; j<(int)this->shape[1]; j++)
             {
-                for(int j=1; j<(int)this->shape[0]; j++)
+                double temp = this->data[0][j];  // Initialize with first element of column
+                for(int i=1; i<(int)this->shape[0]; i++)
                 {
-                     if(this->data[j][i] < temp)
-                            temp = this->data[j][i];
+                    if(this->data[i][j] < temp)
+                        temp = this->data[i][j];
                 }
-                result.data[0][i] = temp;
-               
-                if(i+1 < (int)this->shape[1])
-                    temp = this->data[0][i+1];
+                result.data[0][j] = temp;
             }
             return result;
         }
@@ -185,11 +178,11 @@
             ndarray_t result = array(1, 1);
             result.data[0][0] = this->data[0][0];
 
-            for(int i=1; i<(int)this->shape[0]; i++)
+            for(int i=0; i<(int)this->shape[0]; i++)
             {
                 for(int j=0; j<(int)this->shape[1]; j++)
                 {
-                   if(this->data[i][j] < result.data[0][0])
+                    if(this->data[i][j] < result.data[0][0])
                         result.data[0][0] = this->data[i][j];
                 }
             }
@@ -208,41 +201,35 @@
         {
             null_error();
         }
-        if(strcmp("x", axis)==0)
+        if(strcmp("x", axis)==0)  // Max along rows (for each row)
         {
             ndarray_t result = array(this->shape[0], 1);
-            double temp=this->data[0][0];
 
             for(int i=0; i<(int)this->shape[0]; i++)
             {
+                double temp = this->data[i][0];  // Initialize with first element of row
                 for(int j=1; j<(int)this->shape[1]; j++)
                 {
                     if(this->data[i][j] > temp)
-                            temp = this->data[i][j];
+                        temp = this->data[i][j];
                 }
                 result.data[i][0] = temp;
-                
-                if(i+1 < (int)this->shape[0])
-                    temp = this->data[i+1][0];
             }
             return result;
         }
-        else if (strcmp("y", axis)==0)
+        else if (strcmp("y", axis)==0)  // Max along columns (for each column)
         {
-            ndarray_t result =array(1, this->shape[1]);
-            double temp=this->data[0][0];
+            ndarray_t result = array(1, this->shape[1]);
 
-            for(int i=0; i<(int)this->shape[1]; i++)
+            for(int j=0; j<(int)this->shape[1]; j++)
             {
-                for(int j=1; j<(int)this->shape[0]; j++)
+                double temp = this->data[0][j];  // Initialize with first element of column
+                for(int i=1; i<(int)this->shape[0]; i++)
                 {
-                     if(this->data[j][i] > temp)
-                            temp = this->data[j][i];
+                    if(this->data[i][j] > temp)
+                        temp = this->data[i][j];
                 }
-                result.data[0][i] = temp;
-               
-                if(i+1 < (int)this->shape[1])
-                    temp = this->data[0][i+1];
+                result.data[0][j] = temp;
             }
             return result;
         }
@@ -254,7 +241,7 @@
             {
                 for(int j=0; j<(int)this->shape[1]; j++)
                 {
-                   if(this->data[i][j] > result.data[0][0])
+                    if(this->data[i][j] > result.data[0][0])
                         result.data[0][0] = this->data[i][j];
                 }
             }
@@ -268,18 +255,17 @@
     }
 
 
+
     ndarray_t lower_triangle(double fill, size_t rows, size_t cols)
     {
-        
-        ndarray_t result = array(rows, cols);
-        for(int i=rows-1;i>=0;i--)
+        ndarray_t result = zeros(rows, cols);  // Initialize with zeros
+        for(int i = 0; i < (int)rows; i++)
         {
-            for(int j=i; j>=0; j--)
+            for(int j = 0; j <= i && j < (int)cols; j++)  // j <= i for lower triangle
             {
                 result.data[i][j] = fill;
             }
         }
-        
         return result;
     }
 
@@ -287,33 +273,27 @@
     {
         if(rows != cols)
         {
-           mat_error();
+            mat_error();
         }
 
-        ndarray_t result = array(rows, cols);
-        for(size_t i=0 ;i<rows;i++)
+        ndarray_t result = zeros(rows, cols);  // Initialize with zeros
+        for(size_t i = 0; i < rows; i++)
         {
-            for(size_t j=i; j<cols; j++)
-            {
-                if(i==j)
-                    result.data[i][j] = 1;
-            }
+            result.data[i][i] = 1;  // Set diagonal elements to 1
         }
-        
         return result;
     }
 
     ndarray_t upper_triangle(double fill, size_t rows, size_t cols)
-    {
-        ndarray_t result = array(rows, cols);
-        for(size_t i=0;i<rows;i++)
+   {
+        ndarray_t result = zeros(rows, cols);  // Initialize with zeros
+        for(size_t i = 0; i < rows; i++)
         {
-            for(size_t j=i; j<cols; j++)
+            for(size_t j = i; j < cols; j++)  // j >= i for upper triangle
             {
                 result.data[i][j] = fill;
             }
         }
-        
         return result;
     }
 
@@ -421,34 +401,36 @@
     
 
 
-    ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t send_row_index, size_t rec_row_index)
+    void rassign_inplace(ndarray_t *this, ndarray_t *arrayB, size_t send_row_index, size_t rec_row_index)
     {
-        if (isnull(this))
+        if (isnull(this) || isnull(arrayB))
         {
             null_error();
             exit(EXIT_FAILURE);
         }
-        
-        if (isnull(arrayB))
-        {
-            null_error();
-            exit(EXIT_FAILURE);
-        }
-        
 
-        if(this->shape[1] != arrayB ->shape[1])
+        if(this->shape[1] != arrayB->shape[1])
         {
             mat_error();
+            exit(EXIT_FAILURE);
         }
 
-        ndarray_t result = copy(this);
-
-        for(size_t j=0; j<this->shape[1]; j++)
+        if(rec_row_index >= this->shape[0] || send_row_index >= arrayB->shape[0])
         {
-
-            result.data[rec_row_index][j] = arrayB->data[send_row_index][j];
+            index_error();
+            exit(EXIT_FAILURE);
         }
-        
+
+        for(size_t j = 0; j < this->shape[1]; j++)
+        {
+            this->data[rec_row_index][j] = arrayB->data[send_row_index][j];
+        }
+    }
+
+    ndarray_t rassign(ndarray_t *this, ndarray_t *arrayB, size_t send_row_index, size_t rec_row_index)
+    {
+        ndarray_t result = copy(this);
+        rassign_inplace(&result, arrayB, send_row_index, rec_row_index);
         return result;
     }
 
@@ -498,7 +480,6 @@
         return result;
     }
 
-
     ndarray_t deepcopy(ndarray_t *src) {
         ndarray_t dest = array(src->shape[0], src->shape[1]);
         for(size_t i = 0; i < src->shape[0]; ++i)
@@ -506,4 +487,122 @@
                 dest.data[i][j] = src->data[i][j];
         return dest;
     }
+
+    ndarray_t row_index(ndarray_t *this, int row)
+    {   
+        if(isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+
+        if(row < 0 || row >= (int)this->shape[0])
+        {
+            index_error();
+            exit(EXIT_FAILURE);
+        }
+
+        size_t cols = this->shape[1];
+        ndarray_t dest = array(1, cols);
+        
+        for(size_t j = 0; j < cols; j++)
+            dest.data[0][j] = this->data[row][j];  // Fixed: was dest.data[i][j]
+
+        return dest;
+    }   
     
+
+    ndarray_t get_lines(ndarray_t *this, int *line_numbers, int number)
+    {
+        if(isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+
+        if(line_numbers == NULL)
+        {
+            fprintf(stderr, "Line Numbers is null\n");  // Fixed: was fprint
+            exit(EXIT_FAILURE);
+        }
+
+        size_t cols = this->shape[1];
+        ndarray_t result = array(number, cols);
+
+        for(int i = 0; i < number; i++)
+        {
+            int line_idx = line_numbers[i];
+            
+            // Bounds checking
+            if(line_idx < 0 || line_idx >= (int)this->shape[0])
+            {
+                fprintf(stderr, "Line index %d out of bounds\n", line_idx);
+                clean(&result, NULL);
+                exit(EXIT_FAILURE);
+            }
+
+            // Copy the specified line
+            for(size_t j = 0; j < cols; j++)
+            {
+                result.data[i][j] = this->data[line_idx][j];
+            }
+        }
+
+        return result;
+    }
+
+
+
+    // Get a specific element
+    double get(ndarray_t *this, size_t row, size_t col)
+    {
+        if(isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
+        if(row >= this->shape[0] || col >= this->shape[1])
+        {
+            index_error();
+            exit(EXIT_FAILURE);
+        }
+        
+        return this->data[row][col];
+    }
+
+    // Set a specific element
+    void set(ndarray_t *this, size_t row, size_t col, double value)
+    {
+        if(isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
+        if(row >= this->shape[0] || col >= this->shape[1])
+        {
+            index_error();
+            exit(EXIT_FAILURE);
+        }
+        
+        this->data[row][col] = value;
+    }
+
+    // Fill array with a specific value
+    void fill(ndarray_t *this, double value)
+    {
+        if(isnull(this))
+        {
+            null_error();
+            exit(EXIT_FAILURE);
+        }
+        
+        for(size_t i = 0; i < this->shape[0]; i++)
+        {
+            for(size_t j = 0; j < this->shape[1]; j++)
+            {
+                this->data[i][j] = value;
+            }
+        }
+    }
