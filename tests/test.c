@@ -116,6 +116,11 @@ int main()
 
     print_all_arrays(arrays, sizeof(arrays) / sizeof(arrays[0]));
 
+    print_named_array(describe(q, 0), "Describe" ,2);
+
+    print_named_array(count_rows(q, -1, 2), "Count Rows",2);
+    print_named_array(count_cols(q, -1, 2), "Count Cols",2);
+
     printf("after printing\n\n");
 
     clean_all_arrays(arrays, sizeof(arrays) / sizeof(arrays[0]));

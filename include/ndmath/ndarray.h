@@ -49,6 +49,7 @@ typedef struct ndarray
     double** data;             /**< 2D array of double-precision floating point values */
     struct ndarray *next;      /**< Pointer to next ndarray in linked list (optional) */
     size_t size;              /**< Total number of elements in the array */
+    //size_t ndim;            /**< Total number of dimensions in the array, currently, max supported is 2 */
 } ndarray_t;
 
 /**
@@ -222,6 +223,17 @@ typedef enum {
 /* =================================================================== */
 /*                        COMMENTED UTILITIES                         */
 /* =================================================================== */
+
+
+
+/**
+ * @brief Structure to hold value-count pairs for describe function
+ */
+typedef struct {
+    double value;
+    size_t count;
+} value_count_t;
+
 
 /**
  * @brief Index calculation macro (COMMENTED OUT)

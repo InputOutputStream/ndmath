@@ -552,57 +552,294 @@
     }
 
 
+    static int compare_double_values(const void *a, const void *b) {
+        const double *da = (const double *)a;
+        const double *db = (const double *)b;
+        
+        if (*da < *db) return -1;
+        if (*da > *db) return 1;
+        return 0;
+    }
 
-    // Get a specific element
+    /**
+     * @brief Check if two double values are approximately equal
+     * @internal
+     */
+    static bool double_equals(double a, double b) {
+        const double epsilon = 1e-9;
+        return fabs(a - b) < epsilon;
+    }
+
+    // Improved get function with consistent error handling
     double get(ndarray_t *this, size_t row, size_t col)
     {
-        if(isnull(this))
-        {
-            null_error();
+        if (this == NULL || this->data == NULL) {
+            TRACE();
+            fprintf(stderr, "NULL pointer passed to get()\n");
             exit(EXIT_FAILURE);
         }
         
-        if(row >= this->shape[0] || col >= this->shape[1])
-        {
-            index_error();
+        if (row >= this->shape[0] || col >= this->shape[1]) {
+            TRACE();
+            fprintf(stderr, "Index out of bounds: [%zu,%zu] for array shape [%zu,%zu]\n", 
+                    row, col, this->shape[0], this->shape[1]);
             exit(EXIT_FAILURE);
         }
         
         return this->data[row][col];
     }
 
-    // Set a specific element
+    // Improved set function with consistent error handling
     void set(ndarray_t *this, size_t row, size_t col, double value)
     {
-        if(isnull(this))
-        {
-            null_error();
+        if (this == NULL || this->data == NULL) {
+            TRACE();
+            fprintf(stderr, "NULL pointer passed to set()\n");
             exit(EXIT_FAILURE);
         }
         
-        if(row >= this->shape[0] || col >= this->shape[1])
-        {
-            index_error();
+        if (row >= this->shape[0] || col >= this->shape[1]) {
+            TRACE();
+            fprintf(stderr, "Index out of bounds: [%zu,%zu] for array shape [%zu,%zu]\n", 
+                    row, col, this->shape[0], this->shape[1]);
             exit(EXIT_FAILURE);
         }
         
         this->data[row][col] = value;
     }
 
-    // Fill array with a specific value
+    // Improved fill function with consistent error handling
     void fill(ndarray_t *this, double value)
     {
-        if(isnull(this))
-        {
-            null_error();
+        if (this == NULL || this->data == NULL) {
+            TRACE();
+            fprintf(stderr, "NULL pointer passed to fill()\n");
             exit(EXIT_FAILURE);
         }
         
-        for(size_t i = 0; i < this->shape[0]; i++)
-        {
-            for(size_t j = 0; j < this->shape[1]; j++)
-            {
+        for (size_t i = 0; i < this->shape[0]; i++) {
+            for (size_t j = 0; j < this->shape[1]; j++) {
                 this->data[i][j] = value;
             }
         }
+    }
+
+    // Improved describe function with better error handling and documentation
+    ndarray_t describe(ndarray_t this, size_t idx) 
+    {
+        ndarray_t empty_result = {0};
+        
+        // Input validation
+        if (this.data == NULL) {
+            TRACE();
+            fprintf(stderr, "NULL data pointer in describe()\n");
+            return empty_result;
+        }
+        
+        if (idx > 1) {
+            TRACE();
+            fprintf(stderr, "Invalid axis: %zu. Must be 0 (rows) or 1 (columns)\n", idx);
+            return empty_result;
+        }
+        
+        size_t total_elements = this.shape[0] * this.shape[1];
+        if (total_elements == 0) {
+            return empty_result;
+        }
+        
+        // Collect all values
+        double *all_values = malloc(total_elements * sizeof(double));
+        if (all_values == NULL) {
+            TRACE();
+            fprintf(stderr, "Memory allocation failed for %zu elements\n", total_elements);
+            return empty_result;
+        }
+        
+        size_t value_idx = 0;
+        for (size_t i = 0; i < this.shape[0]; i++) {
+            for (size_t j = 0; j < this.shape[1]; j++) {
+                all_values[value_idx++] = this.data[i][j];
+            }
+        }
+        
+        // Sort values
+        qsort(all_values, total_elements, sizeof(double), compare_double_values);
+        
+        // Count unique values
+        size_t unique_count = 1;
+        for (size_t i = 1; i < total_elements; i++) {
+            if (!double_equals(all_values[i], all_values[i-1])) {
+                unique_count++;
+            }
+        }
+        
+        // Create result array
+        ndarray_t result = {0};
+       
+        
+        result.shape[0] = unique_count;
+        result.shape[1] = 2; // [value, count]
+        result.shape[2] = 0; // Not used for 2D
+        result.size = unique_count * 2;
+        result.next = NULL;
+        
+        // Allocate result data
+        result.data = malloc(unique_count * sizeof(double*));
+        if (result.data == NULL) {
+            free(all_values);
+            TRACE();
+            fprintf(stderr, "Memory allocation failed for result data\n");
+            return empty_result;
+        }
+        
+        // Allocate each row
+        for (size_t i = 0; i < unique_count; i++) {
+            result.data[i] = malloc(2 * sizeof(double));
+            if (result.data[i] == NULL) {
+                // Cleanup previously allocated rows
+                for (size_t j = 0; j < i; j++) {
+                    free(result.data[j]);
+                }
+                free(result.data);
+                    free(all_values);
+                TRACE();
+                fprintf(stderr, "Memory allocation failed for result row %zu\n", i);
+                return empty_result;
+            }
+        }
+        
+        // Fill result with unique values and counts
+        size_t result_idx = 0;
+        size_t current_count = 1;
+        double current_value = all_values[0];
+        
+        for (size_t i = 1; i < total_elements; i++) {
+            if (double_equals(all_values[i], current_value)) {
+                current_count++;
+            } else {
+                result.data[result_idx][0] = current_value;
+                result.data[result_idx][1] = (double)current_count;
+                result_idx++;
+                
+                current_value = all_values[i];
+                current_count = 1;
+            }
+        }
+        
+        // Store the last value and count
+        result.data[result_idx][0] = current_value;
+        result.data[result_idx][1] = (double)current_count;
+        
+        free(all_values);
+        return result;
+    }
+
+    // Improved count_rows function
+    ndarray_t count_rows(ndarray_t this, double col_value, size_t col_index) 
+    {
+        ndarray_t empty_result = {0};
+        
+        // Input validation
+        if (this.data == NULL) {
+            TRACE();
+            fprintf(stderr, "NULL data pointer in count_rows()\n");
+            return empty_result;
+        }
+        
+        if (col_index >= this.shape[1]) {
+            TRACE();
+            fprintf(stderr, "Column index %zu out of bounds for array with %zu columns\n", 
+                    col_index, this.shape[1]);
+            return empty_result;
+        }
+        
+        // Create 1x1 result array
+        ndarray_t result = {0};
+        
+        result.shape[0] = 1;
+        result.shape[1] = 1;
+        result.shape[2] = 0;
+        result.size = 1;
+        result.next = NULL;
+        
+        result.data = malloc(1 * sizeof(double*));
+        if (result.data == NULL) {
+            TRACE();
+            fprintf(stderr, "Memory allocation failed for result data\n");
+            return empty_result;
+        }
+        
+        result.data[0] = malloc(1 * sizeof(double));
+        if (result.data[0] == NULL) {
+            free(result.data);
+            TRACE();
+            fprintf(stderr, "Memory allocation failed for result data row\n");
+            return empty_result;
+        }
+        
+        // Count matching rows
+        size_t count = 0;
+        for (size_t i = 0; i < this.shape[0]; i++) {
+            if (double_equals(this.data[i][col_index], col_value)) {
+                count++;
+            }
+        }
+        
+        result.data[0][0] = (double)count;
+        return result;
+    }
+
+    // Improved count_cols function
+    ndarray_t count_cols(ndarray_t this, double row_value, size_t row_index) 
+    {
+        ndarray_t empty_result = {0};
+        
+        // Input validation
+        if (this.data == NULL) {
+            TRACE();
+            fprintf(stderr, "NULL data pointer in count_cols()\n");
+            return empty_result;
+        }
+        
+        if (row_index >= this.shape[0]) {
+            TRACE();
+            fprintf(stderr, "Row index %zu out of bounds for array with %zu rows\n", 
+                    row_index, this.shape[0]);
+            return empty_result;
+        }
+        
+        // Create 1x1 result array
+        ndarray_t result = {0};
+        
+        result.shape[0] = 1;
+        result.shape[1] = 1;
+        result.shape[2] = 0;
+        result.size = 1;
+        result.next = NULL;
+        
+        result.data = malloc(1 * sizeof(double*));
+        if (result.data == NULL) {
+            TRACE();
+            fprintf(stderr, "Memory allocation failed for result data\n");
+            return empty_result;
+        }
+        
+        result.data[0] = malloc(1 * sizeof(double));
+        if (result.data[0] == NULL) {
+            free(result.data);
+            TRACE();
+            fprintf(stderr, "Memory allocation failed for result data row\n");
+            return empty_result;
+        }
+        
+        // Count matching columns in the specified row
+        size_t count = 0;
+        for (size_t j = 0; j < this.shape[1]; j++) {
+            if (double_equals(this.data[row_index][j], row_value)) {
+                count++;
+            }
+        }
+        
+        result.data[0][0] = (double)count;
+        return result;
     }

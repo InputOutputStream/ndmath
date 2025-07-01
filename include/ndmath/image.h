@@ -135,15 +135,15 @@ extern nd_image_t *matrix_to_ndarray(image_matrix_t *matrix);
  * 
  * Transforms an nd_image_t (n-dimensional array) structure back into an
  * image_matrix_t format. This enables conversion from mathematical operations
- * back to standard image representations.
+ * back to standard image representations for display or file output.
  * 
- * @param matrix Pointer to the source image_matrix_t structure (parameter name appears incorrect)
- * @return Pointer to newly created nd_image_t structure,
+ * @param nd_image Pointer to the source nd_image_t structure with RGB channels
+ * @return Pointer to newly created image_matrix_t structure,
  *         or NULL on conversion failure
  * 
- * @note This function's parameter and return types may need review - 
- *       typically should accept nd_image_t* and return image_matrix_t*
- * @note The returned structure must be freed using appropriate cleanup functions
+ * @note The function signature should likely be: image_matrix_t* ndarray_to_matrix(nd_image_t* nd_image)
+ * @note The returned image_matrix_t must be freed using free_image_matrix()
+ * @note All three channels (c1, c2, c3) in the nd_image must have matching dimensions
  * @see matrix_to_ndarray() for forward conversion
  */
 extern nd_image_t *ndarray_to_matrix(image_matrix_t *matrix);

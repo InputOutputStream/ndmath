@@ -282,4 +282,80 @@ extern double get(ndarray_t *this, size_t row, size_t col);
  */
 extern void fill(ndarray_t *this, double value);
 
+
+/**
+ * @brief Generate descriptive statistics for unique values in an ndarray
+ * 
+ * Analyzes all elements in the ndarray and returns a new ndarray containing
+ * unique values and their occurrence counts. The result is a 2-column array
+ * where column 0 contains unique values and column 1 contains their counts.
+ * 
+ * @param this The input ndarray to analyze (passed by value)
+ * @param idx Axis parameter (0 for rows, 1 for columns) - currently both process all elements
+ * @return ndarray_t A new ndarray with shape [n_unique, 2] containing [value, count] pairs,
+ *                   or empty array on error
+ * 
+ * @note The returned array must be freed using free_array() or equivalent
+ * @note Values are sorted in ascending order in the result
+ * @note Uses floating-point comparison with epsilon for equality testing
+ * 
+ * @warning Function allocates memory that must be properly freed
+ * @see count_rows(), count_cols() for counting specific values
+ **/
+
+extern ndarray_t describe(ndarray_t this, size_t idx);
+
+/**
+ * @brief Count rows containing a specific value in a specified column
+ * 
+ * Searches through all rows in the specified column and counts how many
+ * contain the target value. Uses approximate equality for floating-point comparison.
+ * 
+ * @param this The input ndarray to search (passed by value)
+ * @param col_value The value to search for
+ * @param col_index The column index to search in (must be < shape[1])
+ * @return ndarray_t A 1x1 ndarray containing the count as a double value,
+ *                   or empty array on error
+ * 
+ * @note The returned array must be freed using free_array() or equivalent
+ * @note Uses epsilon-based floating-point comparison for value matching
+ * @note Returns 0 if no matches are found
+ * 
+ * @warning Function allocates memory that must be properly freed
+ * @see count_cols(), describe() for related counting operations
+ */
+extern ndarray_t count_rows(ndarray_t this, double col_value, size_t col_index);
+
+/**
+ * @brief Count columns containing a specific value in a specified row
+ * 
+ * Searches through all columns in the specified row and counts how many
+ * contain the target value. Uses approximate equality for floating-point comparison.
+ * 
+ * @param this The input ndarray to search (passed by value)
+ * @param row_value The value to search for
+ * @param row_index The row index to search in (must be < shape[0])
+ * @return ndarray_t A 1x1 ndarray containing the count as a double value,
+ *                   or empty array on error
+ * 
+ * @note The returned array must be freed using free_array() or equivalent
+ * @note Uses epsilon-based floating-point comparison for value matching
+ * @note Returns 0 if no matches are found
+ * 
+ * @warning Function allocates memory that must be properly freed
+ * @see count_rows(), describe() for related counting operations
+ */
+extern ndarray_t count_cols(ndarray_t this, double row_value, size_t row_index);
+
+    /* =================================================================== */
+    /*                      IMPROVED IMPLEMENTATIONS                      */
+    /* =================================================================== */
+
+    /**
+     * @brief Compare function for sorting value_count_t by value
+     * @internal
+     */
+
+
+
 #endif
